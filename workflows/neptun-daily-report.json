@@ -1,0 +1,116 @@
+{
+  "name": "Neptun Daily Report",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "10000000-0000-4000-8000-000000000001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -600,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = [];\nfor (let i = 0; i < 30; i++) {\n  const date = new Date(Date.UTC(2026, 9, 15 + i)).toISOString().slice(0, 10);\n  const metaPurchases = 5 + (i % 3);\n  const googlePurchases = 8 + (i % 3);\n  rows.push(\n    {\n      date, channel: 'meta', campaign_id: 'demo-meta-01', currency: 'EUR',\n      spend: 100 + i, impressions: 10000 + 100 * i, clicks: 200 + 2 * i,\n      website_sessions: 140 + 2 * i, view_item: 110 + i,\n      add_to_cart: 24 + (i % 7), begin_checkout: 12 + (i % 5),\n      purchases: metaPurchases, purchase_revenue: metaPurchases * (80 + 5 * (i % 4)),\n    },\n    {\n      date, channel: 'google_ads', campaign_id: 'demo-google-01', currency: 'EUR',\n      spend: 150 + 2 * i, impressions: 5000 + 100 * i, clicks: 150 + 3 * i,\n      website_sessions: 120 + 2 * i, view_item: 100 + i,\n      add_to_cart: 30 + (i % 7), begin_checkout: 18 + (i % 5),\n      purchases: googlePurchases, purchase_revenue: googlePurchases * (90 + 5 * (i % 4)),\n    },\n  );\n}\n\nconst expected = {\n  spend: 8805, impressions: 537000, clicks: 12675,\n  website_sessions: 9540, view_item: 7170, add_to_cart: 1790,\n  begin_checkout: 1020, purchases: 450, purchase_revenue: 41925,\n};\nconst totals = Object.fromEntries(Object.keys(expected).map((field) => [field, 0]));\nconst keys = new Set();\nfor (const row of rows) {\n  const key = [row.date, row.channel, row.campaign_id, row.currency].join('|');\n  if (keys.has(key)) throw new Error(`Duplicate generated fixture identity: ${key}`);\n  keys.add(key);\n  for (const field of Object.keys(expected)) {\n    if (!Number.isFinite(row[field]) || row[field] < 0) {\n      throw new Error(`Invalid generated fixture field: ${field}`);\n    }\n    totals[field] += row[field];\n  }\n}\nif (rows.length !== 60 || keys.size !== 60) throw new Error('Expected exactly 60 unique generated records.');\nfor (const [field, value] of Object.entries(expected)) {\n  if (totals[field] !== value) throw new Error(`Generated fixture total mismatch for ${field}: ${totals[field]} !== ${value}`);\n}\n\nreturn [{\n  json: {\n    metadata: {\n      synthetic: true,\n      schema_version: 'demo.v2',\n      generated_at: new Date().toISOString(),\n      row_count: 60,\n    },\n    rows,\n  },\n}];"
+      },
+      "id": "10000000-0000-4000-8000-000000000002",
+      "name": "Code: Generate and validate demo data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -340,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://neptun-marketing-demo.lovable.app/api/public/demo-ingest",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json) }}",
+        "options": {}
+      },
+      "id": "10000000-0000-4000-8000-000000000003",
+      "name": "HTTP Request: Import into Lovable",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -60,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $json;\nconst expected = {\n  spend: 8805, impressions: 537000, clicks: 12675,\n  website_sessions: 9540, view_item: 7170, add_to_cart: 1790,\n  begin_checkout: 1020, purchases: 450, purchase_revenue: 41925,\n};\nconst failures = [];\nif (response.synthetic !== true) failures.push('synthetic flag is not true');\nif (response.schema_version !== 'demo.v2') failures.push('schema version is not demo.v2');\nif (response.imported_record_count !== 60) failures.push('imported record count is not 60');\nif (response.total_unique_row_count !== 60) failures.push('total unique row count is not 60');\nif (!response.imported_at || !Number.isFinite(Date.parse(response.imported_at))) failures.push('import timestamp is missing or invalid');\nfor (const [field, value] of Object.entries(expected)) {\n  if (!response.totals || response.totals[field] !== value) {\n    failures.push(`${field} total does not equal ${value}`);\n  }\n}\nif (failures.length > 0) throw new Error(`Neptun demo import verification failed: ${failures.join('; ')}`);\n\nreturn [{\n  json: {\n    success: true,\n    message: 'Neptun synthetic demo import verified: 60 unique rows and every baseline total matches.',\n    imported_record_count: response.imported_record_count,\n    total_unique_row_count: response.total_unique_row_count,\n    imported_at: response.imported_at,\n    totals: response.totals,\n  },\n}];"
+      },
+      "id": "10000000-0000-4000-8000-000000000004",
+      "name": "Code: Verify result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate and validate demo data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate and validate demo data": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: Import into Lovable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: Import into Lovable": {
+      "main": [
+        [
+          {
+            "node": "Code: Verify result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Skopje",
+    "saveManualExecutions": true
+  },
+  "versionId": "20000000-0000-4000-8000-000000000001",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}

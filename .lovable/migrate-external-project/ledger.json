@@ -1,0 +1,9 @@
+[
+{"capability":"code","source":"TanStack Start app","outcome":"migrate","status":"verified","next_action":"none"},
+{"capability":"schema","source":"3 tables","outcome":"migrate","status":"verified","next_action":"none"},
+{"capability":"records","source":"synthetic demo data","outcome":"migrate","status":"verified","next_action":"none (60 campaign rows seeded, 666 source records imported in-app)"},
+{"capability":"auth","source":"none (public demo)","outcome":"not_applicable","status":"verified","next_action":"none"},
+{"capability":"ai","source":"Lovable AI management report","outcome":"preserve","status":"verified","next_action":"none"},
+{"capability":"public_endpoints","source":"/api/public/demo-ingest, demo-sources-ingest","outcome":"preserve","status":"verified","next_action":"none"},
+{"capability":"n8n workflows","source":"workflows/*.json target old published URL","outcome":"preserve","status":"pending","next_action":"after publishing, point workflows at the new address"}
+]

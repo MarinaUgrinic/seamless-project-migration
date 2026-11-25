@@ -10,33 +10,90 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PitchRouteImport } from './routes/pitch'
+import { Route as ApiManagementReportRouteImport } from './routes/api/management-report'
+import { Route as ApiPublicDemoIngestRouteImport } from './routes/api/public/demo-ingest'
+import { Route as ApiPublicDemoSourcesIngestRouteImport } from './routes/api/public/demo-sources-ingest'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PitchRoute = PitchRouteImport.update({
+  id: '/pitch',
+  path: '/pitch',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiManagementReportRoute = ApiManagementReportRouteImport.update({
+  id: '/api/management-report',
+  path: '/api/management-report',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDemoIngestRoute = ApiPublicDemoIngestRouteImport.update({
+  id: '/api/public/demo-ingest',
+  path: '/api/public/demo-ingest',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicDemoSourcesIngestRoute =
+  ApiPublicDemoSourcesIngestRouteImport.update({
+    id: '/api/public/demo-sources-ingest',
+    path: '/api/public/demo-sources-ingest',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/pitch': typeof PitchRoute
+  '/api/management-report': typeof ApiManagementReportRoute
+  '/api/public/demo-ingest': typeof ApiPublicDemoIngestRoute
+  '/api/public/demo-sources-ingest': typeof ApiPublicDemoSourcesIngestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/pitch': typeof PitchRoute
+  '/api/management-report': typeof ApiManagementReportRoute
+  '/api/public/demo-ingest': typeof ApiPublicDemoIngestRoute
+  '/api/public/demo-sources-ingest': typeof ApiPublicDemoSourcesIngestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/pitch': typeof PitchRoute
+  '/api/management-report': typeof ApiManagementReportRoute
+  '/api/public/demo-ingest': typeof ApiPublicDemoIngestRoute
+  '/api/public/demo-sources-ingest': typeof ApiPublicDemoSourcesIngestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/pitch'
+    | '/api/management-report'
+    | '/api/public/demo-ingest'
+    | '/api/public/demo-sources-ingest'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/pitch'
+    | '/api/management-report'
+    | '/api/public/demo-ingest'
+    | '/api/public/demo-sources-ingest'
+  id:
+    | '__root__'
+    | '/'
+    | '/pitch'
+    | '/api/management-report'
+    | '/api/public/demo-ingest'
+    | '/api/public/demo-sources-ingest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PitchRoute: typeof PitchRoute
+  ApiManagementReportRoute: typeof ApiManagementReportRoute
+  ApiPublicDemoIngestRoute: typeof ApiPublicDemoIngestRoute
+  ApiPublicDemoSourcesIngestRoute: typeof ApiPublicDemoSourcesIngestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +105,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pitch': {
+      id: '/pitch'
+      path: '/pitch'
+      fullPath: '/pitch'
+      preLoaderRoute: typeof PitchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/management-report': {
+      id: '/api/management-report'
+      path: '/api/management-report'
+      fullPath: '/api/management-report'
+      preLoaderRoute: typeof ApiManagementReportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/demo-ingest': {
+      id: '/api/public/demo-ingest'
+      path: '/api/public/demo-ingest'
+      fullPath: '/api/public/demo-ingest'
+      preLoaderRoute: typeof ApiPublicDemoIngestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/demo-sources-ingest': {
+      id: '/api/public/demo-sources-ingest'
+      path: '/api/public/demo-sources-ingest'
+      fullPath: '/api/public/demo-sources-ingest'
+      preLoaderRoute: typeof ApiPublicDemoSourcesIngestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PitchRoute: PitchRoute,
+  ApiManagementReportRoute: ApiManagementReportRoute,
+  ApiPublicDemoIngestRoute: ApiPublicDemoIngestRoute,
+  ApiPublicDemoSourcesIngestRoute: ApiPublicDemoSourcesIngestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,0 +1,1 @@
+CREATE POLICY "Complete synthetic source records are readable" ON public.source_records FOR SELECT TO anon, authenticated USING (fixture_version = 'sources.v2' AND source_id = ANY (ARRAY['meta','google_ads','youtube','spotify','ga4','lwm1','lwm2','lwm3','tv','simulation']));

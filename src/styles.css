@@ -62,6 +62,9 @@
   --color-chart-3: var(--chart-3);
   --color-chart-4: var(--chart-4);
   --color-chart-5: var(--chart-5);
+  --color-demo: var(--demo);
+  --color-demo-foreground: var(--demo-foreground);
+  --font-sans: var(--app-font);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -74,30 +77,33 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --app-font: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --background: oklch(0.985 0.005 240);
+  --foreground: oklch(0.27 0.06 255);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.27 0.06 255);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.27 0.06 255);
+  --primary: oklch(0.3 0.09 258);
+  --primary-foreground: oklch(0.98 0.005 240);
+  --secondary: oklch(0.955 0.015 240);
+  --secondary-foreground: oklch(0.3 0.09 258);
+  --muted: oklch(0.96 0.01 240);
+  --muted-foreground: oklch(0.52 0.03 250);
+  --accent: oklch(0.94 0.03 225);
+  --accent-foreground: oklch(0.3 0.09 258);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
+  --border: oklch(0.91 0.015 245);
+  --input: oklch(0.89 0.02 245);
+  --ring: oklch(0.6 0.12 235);
+  --chart-1: oklch(0.45 0.15 258);
+  --chart-2: oklch(0.72 0.12 210);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
+  --demo: oklch(0.95 0.04 210);
+  --demo-foreground: oklch(0.42 0.1 225);
   --sidebar: oklch(0.984 0.003 247.858);
   --sidebar-foreground: oklch(0.129 0.042 264.695);
   --sidebar-primary: oklch(0.208 0.042 265.755);
@@ -109,7 +115,6 @@
 }
 
 .dark {
-  color-scheme: dark;
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);
@@ -152,5 +157,76 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--app-font);
+    font-feature-settings: "tnum";
   }
 }
+
+@utility ctl {
+  height: 2.25rem;
+  border-radius: calc(var(--radius) - 2px);
+  border: 1px solid var(--input);
+  background: var(--card);
+  padding: 0 0.6rem;
+  font-size: 0.875rem;
+  color: var(--foreground);
+}
+
+/* Analytics-only tokens and treatments keep the pitch presentation unchanged. */
+.dashboard-skin, .management-dialog, .analytics-action {
+  --analytics-blue: oklch(0.43 0.16 255);
+  --analytics-cyan: oklch(0.46 0.09 215);
+  --analytics-wash-blue: oklch(0.95 0.025 250);
+  --analytics-wash-cyan: oklch(0.97 0.025 210);
+  --analytics-shadow: 0 3px 14px oklch(0.3 0.07 250 / 0.05);
+  --analytics-hover-shadow: 0 6px 20px oklch(0.3 0.07 250 / 0.09);
+  --analytics-gradient: linear-gradient(110deg, var(--analytics-blue), var(--analytics-cyan));
+  --analytics-wash: linear-gradient(110deg, var(--analytics-wash-blue), var(--analytics-wash-cyan));
+}
+.dark .dashboard-skin, .dark .management-dialog, .dark .analytics-action {
+  --analytics-wash-blue: oklch(0.23 0.045 250);
+  --analytics-wash-cyan: oklch(0.25 0.035 215);
+}
+.dashboard-skin {
+  background-image: linear-gradient(180deg, var(--analytics-wash-cyan), var(--background) 700px);
+  letter-spacing: 0;
+}
+.dashboard-masthead { box-shadow: var(--analytics-shadow); }
+.dashboard-overview { background: var(--analytics-wash); padding-inline: 1.5rem; }
+.dashboard-filters { box-shadow: var(--analytics-shadow); }
+.dashboard-surface { background: var(--card); }
+.dashboard-kpi { box-shadow: var(--analytics-shadow); border-radius: 8px; transition: box-shadow 160ms ease, border-color 160ms ease; }
+.dashboard-kpi:hover { box-shadow: var(--analytics-hover-shadow); border-color: var(--ring); }
+.dashboard-icon { display: inline-flex; flex-shrink: 0; align-items: center; justify-content: center; width: 1.75rem; height: 1.75rem; border-radius: 6px; background: var(--analytics-wash); color: var(--chart-1); }
+.dashboard-heading-icon { display: inline-block; width: 1rem; height: 1rem; margin-right: 0.5rem; vertical-align: -0.15em; color: var(--chart-1); flex-shrink: 0; }
+.analytics-action { background: var(--analytics-gradient); color: var(--primary-foreground); box-shadow: var(--analytics-shadow); }
+.analytics-action:hover { box-shadow: var(--analytics-hover-shadow); filter: brightness(1.08); }
+.dark .analytics-action { color: var(--foreground); }
+.management-dialog { background: var(--card); box-shadow: var(--analytics-hover-shadow); letter-spacing: 0; }
+.management-dialog-header { background: var(--analytics-wash); margin: -1rem -1rem 0; padding: 1.25rem 2.75rem 1.25rem 1.25rem; }
+.dashboard-skin .ctl { width: 100%; min-width: 0; }
+.dashboard-skin :is(button, a, input, select, summary):focus-visible, .management-dialog :is(button, summary):focus-visible {
+  outline: 2px solid var(--ring); outline-offset: 3px;
+}
+.dashboard-skin tbody tr:hover { background: var(--secondary); }
+.dashboard-skin :is(h1,h2,h3,h4) { letter-spacing: 0; }
+@media (min-width: 640px) { .management-dialog-header { margin: -1.5rem -1.5rem 0; padding: 1.5rem 3rem 1.5rem 1.5rem; } }
+@media (max-width: 400px) { .dashboard-kpi { padding: 0; } .dashboard-overview { padding-inline: 1rem; } }
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-skin *, .management-dialog, .management-dialog *, .analytics-action { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+.dashboard-skin {
+  --analytics-youtube: oklch(0.60 0.16 25);
+  --analytics-spotify: oklch(0.54 0.12 150);
+  --analytics-website: oklch(0.52 0.08 220);
+  --analytics-lwm: oklch(0.66 0.13 80);
+  --analytics-tv: oklch(0.52 0.13 290);
+  --analytics-stores: oklch(0.55 0.11 350);
+}
+.dashboard-panel { align-self: start; }
+.dashboard-panel [hidden] { display: none; }
+.dashboard-panel .dashboard-panel h2 { line-height: 1.5; }
+@media (max-width: 400px) { .dashboard-panel .dashboard-heading-icon { margin-right: 0.25rem; width: 0.875rem; height: 0.875rem; } }
+
+@media (max-width: 400px) { .dashboard-kpi-grid { grid-template-columns: minmax(0, 1fr); } }

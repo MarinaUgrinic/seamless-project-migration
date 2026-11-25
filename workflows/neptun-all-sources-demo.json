@@ -1,0 +1,154 @@
+{
+  "name": "Neptun All Sources Demo",
+  "nodes": [
+    {
+      "id": "20000000-0000-4000-8000-000000000001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -700,
+        0
+      ],
+      "parameters": {}
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000002",
+      "name": "Code: Generate synthetic source bundle",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -440,
+        0
+      ],
+      "parameters": {
+        "jsCode": "// Wholly synthetic generated samples for 10 source bundles (including the complete channel/Stores simulation). Reads no files, accounts or databases.\nconst generateSourceBundle = function generateSourceBundle() {\n  const day = (i) => new Date(Date.UTC(2026, 9, 15 + i)).toISOString().slice(0, 10), dmy = (iso) => iso.slice(8, 10) + \".\" + iso.slice(5, 7) + \".\" + iso.slice(0, 4), r2 = (n) => Math.round(n * 100) / 100, r4 = (n) => Math.round(n * 1e4) / 1e4, metaRows = [[\"Reporting starts\", \"Reporting ends\", \"Campaign name\", \"Campaign delivery\", \"Attribution setting\", \"Results\", \"Result indicator\", \"Reach\", \"Frequency\", \"Cost per results\", \"Ad set budget\", \"Ad set budget type\", \"Amount spent (EUR)\", \"Ends\", \"Impressions\", \"CPM (cost per 1,000 impressions) (EUR)\", \"Link clicks\", \"shop_clicks\", \"CPC (cost per link click) (EUR)\", \"CTR (link click-through rate)\", \"Clicks (all)\", \"CTR (all)\", \"CPC (all) (EUR)\", \"Landing page views\", \"Cost per landing page view (EUR)\", \"Results (initial)\", \"Results (initial) indicator\"]], mt = { spend: 0, impr: 0, link: 0, all: 0, shop: 0, lpv: 0 };\n  for (let i = 0;i < 30; i++) {\n    const spend = 100 + i, impr = 1e4 + 100 * i, link = 200 + 2 * i, all = link + 40 + i, reach = 7000 + 50 * i, lpv = 150 + i, shop = 10 + i % 4;\n    mt.spend += spend;\n    mt.impr += impr;\n    mt.link += link;\n    mt.all += all;\n    mt.shop += shop;\n    mt.lpv += lpv;\n    metaRows.push([day(i), day(i), \"Synthetic Demo Campaign A\", \"active\", \"7-day click or 1-day view\", lpv, \"actions:landing_page_view\", reach, r2(impr / reach), r2(spend / lpv), 150, \"Daily\", spend, \"Ongoing\", impr, r2(spend / impr * 1000), link, shop, r2(spend / link), r2(link / impr * 100), all, r2(all / impr * 100), r2(spend / all), lpv, r2(spend / lpv), lpv, \"actions:landing_page_view\"]);\n  }\n  metaRows.push([day(0), day(29), null, null, null, mt.lpv, null, 61000, null, null, null, null, mt.spend, null, mt.impr, null, mt.link, mt.shop, null, null, mt.all, null, null, mt.lpv, null, mt.lpv, null]);\n  const g = [\n    [\"Enabled\", \"Synthetic Search Demo\", 180, \"Synthetic search budget\", \"Daily\", \"EUR\", \"Eligible\", \"Generated eligible campaign\", \"84.0%\", \"Search\", 250.5, 5400, r2(19.960079840319363), \"2.80%\", r2(0.9259259259259259), \"61.20%\", 180000, \"3.00%\", 5000, \"1.12\"],\n    [\"Enabled\", \"Synthetic Brand Demo\", 40, \"Synthetic brand budget\", \"Daily\", \"EUR\", \"Eligible\", \"Generated eligible campaign\", \"91.0%\", \"Search\", 20, 405, 18.5, \"2.90%\", r2(0.9135802469135802), \"68.40%\", 13500, \"3.00%\", 370, \"1.08\"]\n  ], googleRows = [\n    [\"Campaign report\"],\n    [\"October 15, 2026 - November 13, 2026\"],\n    [\"Campaign status\", \"Campaign\", \"Budget\", \"Budget name\", \"Budget type\", \"Currency code\", \"Status\", \"Status reasons\", \"Optimization score\", \"Campaign type\", \"Conversions\", \"Clicks\", \"Cost / conv.\", \"Viewable CTR\", \"Avg. CPC\", \"% Engaged sessions (GA4)\", \"Impr.\", \"CTR\", \"Cost\", \"Relative CTR\"],\n    ...g,\n    [\"Total: Account\", \"Synthetic account total\", null, null, null, \"EUR\", null, null, null, null, 270.5, 5805, null, null, null, null, 193500, \"3.00%\", 5370, null],\n    [\"Total: Campaigns\", \"Synthetic campaigns total\", null, null, null, \"EUR\", null, null, null, null, 270.5, 5805, null, null, null, null, 193500, \"3.00%\", 5370, null]\n  ], yt = [[\"Synthetic video A\", 8000, 420.5, 40, 90000, 4.5], [\"Synthetic video B\", 5350, 280.25, 25, 60000, 4], [\"Synthetic video C\", 3000, 150.75, 10, 40000, 3.5]], ytDaily = [];\n  for (let i = 0;i < 30; i++)\n    ytDaily.push([day(i), 400 + 10 * i]);\n  const youtube = {\n    format: \"xlsx\",\n    sheets: [\n      { name: \"Table data\", rows: [[\"Content\", \"Views\", \"Watch time (hours)\", \"Subscribers\", \"Thumbnail impressions\", \"Thumbnail click-through rate (%)\"], [\"Total\", 16350, 851.5, 75, 190000, 4.13], ...yt] },\n      { name: \"Chart data\", rows: [[\"Date\", \"Views\"], [\"Total\", 16350], ...ytDaily] }\n    ]\n  }, formats = [[\"Audio\", 3], [\"Video\", 2], [\"Podcast\", 3], [\"Display\", 2]], summary = [[\"Spotify Ad Studio \\u2014 synthetic demo\"], [\"Campaign: Synthetic Audio Demo\"], [\"Order: SYN-ORDER-1\"], [\"Reporting period: 2026-10-15 - 2026-11-13\"], [], [], [\"Delivery summary\"]], detailSheets = [];\n  let k = 0;\n  for (const [fmt, count] of formats) {\n    summary.push([\"Format\", \"Creative\", \"Impressions\", \"Clicks\", \"CTR\"]);\n    const detail = [[\"Order\", \"Line item\", \"Creative\", \"Date\", \"Ad server impressions\", \"Ad server clicks\", \"Ad server CTR\", \"Start\", \"First quartile\", \"Midpoint\", \"Third quartile\", \"Complete\", \"Completion rate\"]];\n    let fi = 0, fc = 0;\n    for (let c = 0;c < count; c++, k++) {\n      const creative = \"Synthetic \" + fmt.toLowerCase() + \" creative \" + (c + 1);\n      let ci = 0, cc = 0;\n      for (let i = 0;i < 30; i++) {\n        const impr = 1000 + 50 * k + 10 * i, clicks = 3 + (k + i) % 4, start = impr - 20 - k;\n        ci += impr;\n        cc += clicks;\n        detail.push([\n          \"SYN-ORDER-1\",\n          \"Synthetic \" + fmt.toLowerCase() + \" line\",\n          creative,\n          day(i),\n          impr,\n          clicks,\n          r2(clicks / impr * 100),\n          start,\n          start - 50,\n          start - 100,\n          start - 150,\n          start - 200,\n          r2((start - 200) / start * 100)\n        ]);\n      }\n      fi += ci;\n      fc += cc;\n      summary.push([fmt, creative, ci, cc, r2(cc / ci * 100)]);\n    }\n    summary.push([\"Total\", null, fi, fc, r2(fc / fi * 100)]);\n    summary.push([]);\n    detailSheets.push({ name: fmt + \" detail\", rows: detail });\n  }\n  summary.pop();\n  const ch = [[\"Organic Search\", 4200, 2900, 60, 8, 120, 100, 5400.5], [\"Paid Social\", 3100, 1800, 65, 9, 140, 120, 6200], [\"Paid Search\", 2600, 1700, 70, 10, 160, 130, 7800.25], [\"Direct\", 1900, 1300, 75, 11, 60, 50, 2100], [\"Referral\", 700, 420, 80, 12, 15, 12, 600], [\"Unassigned\", 150, 40, 85, 13, 0, 0, 0]], ga4Rows = [\n    [\"# ----------------------------------------\"],\n    [\"# Traffic acquisition: Session primary channel group (Default Channel Group)\"],\n    [\"# Account: Synthetic demo account\"],\n    [\"# Property: Synthetic demo property\"],\n    [\"# ----------------------------------------\"],\n    [\"#\"],\n    [\"# Start date: 20261015\"],\n    [\"# End date: 20261113\"],\n    [\"# Synthetic: generated demo data\"],\n    [\"Session primary channel group (Default Channel Group)\", \"Sessions\", \"Engaged sessions\", \"Engagement rate\", \"Average engagement time per session\", \"Events per session\", \"Event count\", \"Key events\", \"Session key event rate\", \"Total revenue\"]\n  ], tot = [0, 0, 0, 0, 0, 0];\n  for (const [name, s, e, avg, eps, ke, kes, rev] of ch) {\n    ga4Rows.push([name, s, e, r4(e / s), avg, eps, s * eps, ke, r4(kes / s), rev]);\n    tot[0] += s;\n    tot[1] += e;\n    tot[2] += s * eps;\n    tot[3] += ke;\n    tot[4] += rev;\n  }\n  ga4Rows.push([\"Total\", tot[0], tot[1], r4(tot[1] / tot[0]), null, null, tot[2], tot[3], null, tot[4]]);\n  const lwmLegacy = (n, start, days, imprF, clickF, label) => {\n    const rows = [[null, \"LWM network report \\u2014 synthetic\"], [null, \"Campaign: \" + label], [null, \"Advertiser: Synthetic demo\"], [null, \"Report period: \" + day(start) + \" - \" + day(start + days - 1)], [null, \"Inventory: synthetic-lwm-inv-\" + n + \" (distinct generated inventory)\"], [], [], [], [], [null, \"Day\", \"Impr.\", \"Clicks\", \"Generated cost (EUR)\", \"Generated reach\"]];\n    let ti = 0, tc = 0;\n    for (let j = 0;j < days; j++) {\n      const im = imprF(j), cl = clickF(j);\n      ti += im;\n      tc += cl;\n      rows.push([null, dmy(day(start + j)), im, cl, r2(im * 0.003), Math.floor(im * 0.7)]);\n    }\n    rows.push([null, \"Total\", ti, tc, r2(ti * 0.003), Math.floor(ti * 0.7)]);\n    return { format: \"xls\", sheets: [{ name: \"Report\", rows }] };\n  }, lwm2 = [[null, \"LWM 2 delivery report \\u2014 synthetic\"], [null, \"Campaign: Synthetic LWM Video 2\"], [null, \"Inventory: synthetic-lwm-inv-2 (distinct generated inventory)\"], [], [null, \"Days\", \"Impressions\", \"Daily Reach\", \"Clicks\", \"CTR\", \"CPC\", \"CPM\", \"Amount\"]];\n  let l2i = 0, l2c = 0, l2a = 0;\n  for (let j = 0;j < 10; j++) {\n    const im = 4000 + 200 * j, re = 3000 + 150 * j, cl = 8 + j, am = r2(im * 0.004);\n    l2i += im;\n    l2c += cl;\n    l2a += am;\n    lwm2.push([null, day(17 + j), im, re, cl, r2(cl / im * 100), r2(am / cl), r2(am / im * 1000), am]);\n  }\n  l2a = r2(l2a);\n  lwm2.push([null, \"Total\", l2i, null, l2c, r2(l2c / l2i * 100), r2(l2a / l2c), r2(l2a / l2i * 1000), l2a]);\n  lwm2.push([]);\n  lwm2.push([null, \"Sites\", \"Impressions\", \"Daily Reach\", \"Clicks\", \"CTR\", \"CPC\", \"CPM\", \"Amount\"]);\n  for (const [site, im, re, cl, am] of [[\"synthetic-news.example\", 25000, 18000, 60, 100], [\"synthetic-sport.example\", 15000, 11000, 40, 60], [\"synthetic-weather.example\", 9000, 7000, 25, 36]])\n    lwm2.push([null, site, im, re, cl, r2(cl / im * 100), r2(am / cl), r2(am / im * 1000), am]);\n  lwm2.push([null, \"Total\", l2i, null, l2c, r2(l2c / l2i * 100), r2(l2a / l2c), r2(l2a / l2i * 1000), l2a]);\n  const tv = [\n    [\"TV campaign report \\u2014 synthetic\"],\n    [\"Campaign\", \"Period\", \"GRPs (TTL)\", \"Reach 1+ (TTL)\", \"Reach 3+ (TTL)\", \"TRPs (all 16+)\", \"Reach 1+ (all 16+)\", \"Reach 3+ (all 16+)\", \"Net Cost\", \"note\"],\n    [\"Synthetic TV Autumn\", \"15.10.2026 - 31.10.2026\", 180.5, 52.3, 28.1, 210.2, 58.4, 31.6, 12000, \"Synthetic flight 1\"],\n    [\"Synthetic TV Autumn\", \"01.11.2026 - 13.11.2026\", 140, 45.2, 22.4, 162.8, 50.1, 25.9, 9500, \"Synthetic flight 2\"],\n    [\"Total\", null, 320.5, null, null, 373, null, null, 21500, null],\n    [],\n    [\"TTL universe: all individuals 4+ (synthetic)\"],\n    [\"16+ universe: all individuals 16+ (synthetic)\"]\n  ], alloc = (total, i, n = 30, scale = 1) => (Math.floor(total * scale * (i + 1) / n) - Math.floor(total * scale * i / n)) / scale, channels = [\"meta\", \"google_ads\", \"youtube\", \"spotify\", \"ga4\", \"lwm\", \"tv\", \"stores\"], header = [\"Date\", \"Channel\", \"Spend EUR\", \"Impressions\", \"Reach\", \"Clicks\", \"Website sessions\", \"Product views\", \"Add to basket\", \"Checkout\", \"Purchases\", \"Revenue EUR\", \"Post engagements\", \"Video views\", \"Playback starts\", \"First quartile\", \"Midpoint\", \"Third quartile\", \"Completes\", \"Watch hours\", \"Subscribers\", \"Thumbnail impressions\", \"Thumbnail clicks\", \"Users\", \"New users\", \"Engaged sessions\", \"Engagement seconds\", \"Event count\", \"Key events\", \"Key event sessions\", \"GRPs TTL\", \"TRPs 16+\", \"Reach 1 TTL pct\", \"Reach 3 TTL pct\", \"Reach 1 16 pct\", \"Reach 3 16 pct\", \"Footfall before\", \"Footfall during\", \"Footfall after\", \"Sales documents\", \"Quantity\", \"Net sales EUR\", \"Allocation\", \"Reach cohort start\", \"Reach universe\"], ledgerSheets = [];\n  for (const channel of channels) {\n    const rows = [header];\n    for (let i = 0;i < 30; i++) {\n      let spend, impr, clicks, sessions, views, basket, checkout, purchases, revenue, allocation = \"Generated daily observation\";\n      if (channel === \"meta\" || channel === \"google_ads\") {\n        const m = channel === \"meta\";\n        spend = m ? 100 + i : 150 + 2 * i;\n        impr = m ? 1e4 + 100 * i : 5000 + 100 * i;\n        clicks = m ? 200 + 2 * i : 150 + 3 * i;\n        sessions = (m ? 140 : 120) + 2 * i;\n        views = (m ? 110 : 100) + i;\n        basket = (m ? 24 : 30) + i % 7;\n        checkout = (m ? 12 : 18) + i % 5;\n        purchases = (m ? 5 : 8) + i % 3;\n        revenue = purchases * ((m ? 80 : 90) + 5 * (i % 4));\n      } else {\n        if (channel === \"youtube\") {\n          impr = alloc(190000, i);\n          clicks = alloc(7850, i);\n          spend = alloc(1635, i, 30, 100);\n        }\n        if (channel === \"spotify\") {\n          const all = detailSheets.flatMap((s) => s.rows.slice(1)).filter((r) => r[3] === day(i));\n          impr = all.reduce((t, r) => t + r[4], 0);\n          clicks = all.reduce((t, r) => t + r[5], 0);\n          spend = r2(impr * 0.005);\n        }\n        if (channel === \"lwm\") {\n          const l1 = i < 14 ? 3000 + 100 * i : 0, l3 = i >= 14 ? 2500 + 80 * (i - 14) : 0, l2 = i >= 17 && i < 27 ? 4000 + 200 * (i - 17) : 0;\n          impr = l1 + l2 + l3;\n          clicks = (l1 ? 6 + i % 5 : 0) + (l3 ? 5 + (i - 14) % 4 : 0) + (l2 ? 8 + i - 17 : 0);\n          spend = r2((l1 + l3) * 0.003 + l2 * 0.004);\n        }\n        if (channel === \"tv\") {\n          const first = i < 17, j = first ? i : i - 17, n = first ? 17 : 13;\n          impr = alloc(first ? 680000 : 520000, j, n);\n          clicks = 0;\n          spend = alloc(first ? 12000 : 9500, j, n, 100);\n          allocation = \"Simulated daily allocation of fixed flight totals; responses are not measured TV clicks\";\n        }\n        if (channel === \"ga4\") {\n          impr = alloc(12650, i);\n          clicks = 0;\n          spend = 0;\n          allocation = \"Simulated daily allocation of site-wide period observations; not campaign attribution\";\n        }\n        if (channel === \"stores\") {\n          impr = 280 + 4 * i;\n          clicks = 0;\n          spend = 20 + i % 4;\n          allocation = \"Generated store visits and offline sales; separate from website revenue\";\n        }\n        sessions = channel === \"ga4\" ? ch.reduce((t, r) => t + alloc(r[1], i), 0) : channel === \"stores\" ? impr : channel === \"tv\" ? 90 + 2 * i : channel === \"lwm\" ? 28 + i : Math.floor(clicks * 0.72);\n        views = Math.floor(sessions * 0.75);\n        basket = Math.floor(views * 0.28);\n        checkout = Math.floor(basket * 0.62);\n        purchases = Math.max(1, Math.floor(checkout * 0.65));\n        revenue = purchases * (85 + 5 * (i % 4));\n        if (channel === \"ga4\")\n          revenue = r2(ch.reduce((t, r) => t + alloc(r[7], i, 30, 100), 0));\n        if (channel === \"stores\") {\n          purchases = 35 + i % 6;\n          checkout = purchases + 9;\n          basket = checkout + 15;\n          revenue = purchases * (52 + i % 4);\n        }\n      }\n      if (channel === \"ga4\" || channel === \"stores\")\n        impr = sessions;\n      const reach = channel === \"meta\" ? 7000 + 50 * i : Math.floor(impr * 0.7), engaged = channel === \"ga4\" ? ch.reduce((t, r) => t + alloc(r[2], i), 0) : Math.floor(sessions * 0.68), eventCount = channel === \"ga4\" ? ch.reduce((t, r) => t + alloc(r[1] * r[4], i), 0) : views + basket + checkout + purchases + sessions, keyEvents = channel === \"ga4\" ? ch.reduce((t, r) => t + alloc(r[5], i), 0) : purchases, keySessions = channel === \"ga4\" ? ch.reduce((t, r) => t + alloc(r[6], i), 0) : purchases, sp = detailSheets.flatMap((s) => s.rows.slice(1)).filter((r) => r[3] === day(i)), playback = channel === \"spotify\" ? sp.reduce((t, r) => t + r[7], 0) : Math.floor(impr * 0.6), milestone = (index, scale) => channel === \"spotify\" ? sp.reduce((t, r) => t + r[index], 0) : Math.floor(playback * scale), videoViews = channel === \"youtube\" ? 400 + 10 * i : Math.floor(playback * 0.8), flightFirst = i < 17, flightIx = flightFirst ? i : i - 17, flightDays = flightFirst ? 17 : 13;\n      rows.push([\n        day(i),\n        channel,\n        spend,\n        impr,\n        reach,\n        clicks,\n        sessions,\n        views,\n        basket,\n        checkout,\n        purchases,\n        revenue,\n        channel === \"meta\" ? 350 + 3 * i : Math.floor(clicks * 1.4),\n        videoViews,\n        playback,\n        milestone(8, 0.9),\n        milestone(9, 0.82),\n        milestone(10, 0.74),\n        milestone(11, 0.66),\n        alloc(851.5, i, 30, 100),\n        alloc(75, i),\n        alloc(190000, i),\n        alloc(7850, i),\n        Math.floor(sessions * 0.84),\n        Math.floor(sessions * 0.48),\n        engaged,\n        channel === \"ga4\" ? ch.reduce((t, r) => t + alloc(r[1] * r[3], i), 0) : sessions * (60 + i % 7),\n        eventCount,\n        keyEvents,\n        keySessions,\n        channel === \"tv\" ? alloc(flightFirst ? 180.5 : 140, flightIx, flightDays, 100) : 0,\n        channel === \"tv\" ? alloc(flightFirst ? 210.2 : 162.8, flightIx, flightDays, 100) : 0,\n        flightFirst ? 52.3 : 45.2,\n        flightFirst ? 28.1 : 22.4,\n        flightFirst ? 58.4 : 50.1,\n        flightFirst ? 31.6 : 25.9,\n        220 + 3 * i,\n        channel === \"stores\" ? sessions : 280 + 4 * i,\n        250 + 3 * i,\n        purchases,\n        purchases * 2,\n        revenue,\n        allocation,\n        i * 733 % 50000,\n        50000\n      ]);\n    }\n    ledgerSheets.push({ name: channel, rows });\n  }\n  return {\n    metadata: { synthetic: !0, schema_version: \"sources.v2\", campaign: \"Synthetic Autumn Demo\", period_start: day(0), period_end: day(29), note: \"Wholly generated demo data. Not real Neptun performance.\" },\n    sources: {\n      meta: { format: \"csv\", sheets: [{ name: \"Meta export\", rows: metaRows }] },\n      google_ads: { format: \"csv\", sheets: [{ name: \"Campaign report\", rows: googleRows }] },\n      youtube,\n      spotify: { format: \"xlsx\", sheets: [{ name: \"Summary\", rows: summary }, ...detailSheets] },\n      ga4: { format: \"csv\", sheets: [{ name: \"Traffic acquisition\", rows: ga4Rows }] },\n      lwm1: lwmLegacy(1, 0, 14, (j) => 3000 + 100 * j, (j) => 6 + j % 5, \"Synthetic LWM Display 1\"),\n      lwm2: { format: \"xlsx\", sheets: [{ name: \"Report\", rows: lwm2 }] },\n      lwm3: lwmLegacy(3, 14, 16, (j) => 2500 + 80 * j, (j) => 5 + j % 4, \"Synthetic LWM Display 3\"),\n      tv: { format: \"xlsx\", sheets: [{ name: \"TV\", rows: tv }] },\n      simulation: { format: \"xlsx\", sheets: ledgerSheets }\n    }\n  };\n};\nconst bundle = generateSourceBundle();\nif (bundle.metadata.synthetic !== true || Object.keys(bundle.sources).length !== 10) throw new Error('Generator did not produce the synthetic 10-source bundle');\nreturn [{ json: { metadata: bundle.metadata, sources: bundle.sources } }];"
+      }
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000003",
+      "name": "HTTP Request: Import (first run)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -160,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://neptun-marketing-demo.lovable.app/api/public/demo-sources-ingest",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Code: Generate synthetic source bundle').first().json) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000004",
+      "name": "HTTP Request: Import again (idempotency)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        0
+      ],
+      "parameters": {
+        "method": "POST",
+        "url": "https://neptun-marketing-demo.lovable.app/api/public/demo-sources-ingest",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($('Code: Generate synthetic source bundle').first().json) }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "20000000-0000-4000-8000-000000000005",
+      "name": "Code: Verify counts, totals and idempotency",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        0
+      ],
+      "parameters": {
+        "jsCode": "const first = $('HTTP Request: Import (first run)').first().json;\nconst second = $json;\nconst expectedCount = 666;\nconst expected = {\"meta\":{\"records\":30,\"kinds\":{\"daily\":30},\"totals\":{\"impressions\":343500,\"link_clicks\":6870,\"clicks_all\":8505,\"spend\":3435}},\"google_ads\":{\"records\":2,\"kinds\":{\"campaign_period\":2},\"totals\":{\"impressions\":193500,\"clicks\":5805,\"cost\":5370}},\"youtube\":{\"records\":33,\"kinds\":{\"content_summary\":3,\"daily_views\":30},\"totals\":{\"views\":16350}},\"spotify\":{\"records\":310,\"kinds\":{\"daily_detail\":300,\"summary\":10},\"totals\":{\"impressions\":411000,\"clicks\":1348}},\"ga4\":{\"records\":6,\"kinds\":{\"channel_period\":6},\"totals\":{\"sessions\":12650}},\"lwm1\":{\"records\":14,\"kinds\":{\"daily\":14},\"totals\":{\"impressions\":51100,\"clicks\":110,\"cost\":153.3}},\"lwm2\":{\"records\":13,\"kinds\":{\"daily\":10,\"site_breakdown\":3},\"totals\":{\"impressions\":49000,\"clicks\":125,\"cost\":196}},\"lwm3\":{\"records\":16,\"kinds\":{\"daily\":16},\"totals\":{\"impressions\":49600,\"clicks\":104,\"cost\":148.8}},\"tv\":{\"records\":2,\"kinds\":{\"flight\":2},\"totals\":{\"net_cost\":21500,\"grps_ttl\":320.5}},\"simulation\":{\"records\":240,\"kinds\":{\"simulated_daily\":240},\"totals\":{}}};\nconst expectedChannels = {\"meta\":{\"records\":30,\"spend\":3435,\"impressions\":343500,\"clicks\":6870,\"sessions\":5070,\"purchases\":180,\"revenue\":15690,\"views\":3735,\"basket\":805,\"checkout\":420,\"purchaseRate\":3.5502958579881656,\"cpa\":19.083333333333332,\"roas\":4.567685589519651,\"responseRate\":1.4759825327510916,\"costPerResponse\":0.6775147928994083,\"ctr\":2,\"cpc\":0.5},\"google_ads\":{\"records\":30,\"spend\":5370,\"impressions\":193500,\"clicks\":5805,\"sessions\":4470,\"purchases\":270,\"revenue\":26235,\"views\":3435,\"basket\":985,\"checkout\":600,\"purchaseRate\":6.0402684563758395,\"cpa\":19.88888888888889,\"roas\":4.885474860335195,\"responseRate\":2.310077519379845,\"costPerResponse\":1.2013422818791946,\"ctr\":3,\"cpc\":0.9250645994832042},\"youtube\":{\"records\":30,\"spend\":1635,\"impressions\":190000,\"clicks\":7850,\"sessions\":5630,\"purchases\":450,\"revenue\":41475,\"views\":4220,\"basket\":1170,\"checkout\":720,\"purchaseRate\":7.992895204262878,\"cpa\":3.6333333333333333,\"roas\":25.36697247706422,\"responseRate\":2.963157894736842,\"costPerResponse\":0.29040852575488457,\"ctr\":4.131578947368421,\"cpc\":0.20828025477707007},\"spotify\":{\"records\":30,\"spend\":2055,\"impressions\":411000,\"clicks\":1348,\"sessions\":951,\"purchases\":30,\"revenue\":2765,\"views\":704,\"basket\":180,\"checkout\":90,\"purchaseRate\":3.1545741324921135,\"cpa\":68.5,\"roas\":1.3454987834549879,\"responseRate\":0.23138686131386862,\"costPerResponse\":2.1608832807570977,\"ctr\":0.32798053527980536,\"cpc\":1.524480712166172},\"ga4\":{\"records\":30,\"spend\":0,\"impressions\":12650,\"clicks\":0,\"sessions\":12650,\"purchases\":1050,\"revenue\":22100.75,\"views\":9480,\"basket\":2650,\"checkout\":1630,\"purchaseRate\":8.300395256916996,\"cpa\":0,\"roas\":null,\"responseRate\":100,\"costPerResponse\":0,\"ctr\":0,\"cpc\":null},\"lwm\":{\"records\":30,\"spend\":498.1,\"impressions\":149700,\"clicks\":339,\"sessions\":1275,\"purchases\":68,\"revenue\":6270,\"views\":945,\"basket\":249,\"checkout\":138,\"purchaseRate\":5.333333333333334,\"cpa\":7.325,\"roas\":12.587833768319614,\"responseRate\":0.8517034068136272,\"costPerResponse\":0.39066666666666666,\"ctr\":0.22645290581162328,\"cpc\":1.469321533923304},\"tv\":{\"records\":30,\"spend\":21500,\"impressions\":1200000,\"clicks\":0,\"sessions\":3570,\"purchases\":276,\"revenue\":25450,\"views\":2670,\"basket\":734,\"checkout\":441,\"purchaseRate\":7.73109243697479,\"cpa\":77.89855072463769,\"roas\":1.1837209302325582,\"responseRate\":0.29750000000000004,\"costPerResponse\":6.022408963585434,\"ctr\":0,\"cpc\":null},\"stores\":{\"records\":30,\"spend\":643,\"impressions\":10140,\"clicks\":0,\"sessions\":10140,\"purchases\":1125,\"revenue\":60120,\"views\":7605,\"basket\":1845,\"checkout\":1395,\"purchaseRate\":11.094674556213018,\"cpa\":0.5715555555555556,\"roas\":93.49922239502332,\"responseRate\":100,\"costPerResponse\":0.06341222879684418,\"ctr\":0,\"cpc\":null}};\nconst failures = [];\nfor (const [label, r] of [['first', first], ['second', second]]) {\n  if (r.synthetic !== true) failures.push(label + ': synthetic flag is not true');\n  if (r.schema_version !== 'sources.v2') failures.push(label + ': schema version is not sources.v2');\n  if (r.imported_record_count !== expectedCount) failures.push(label + ': imported ' + r.imported_record_count + ' records, expected ' + expectedCount);\n  if (r.total_source_record_count !== expectedCount) failures.push(label + ': stored ' + r.total_source_record_count + ' records, expected ' + expectedCount);\n  if (!r.imported_at || !Number.isFinite(Date.parse(r.imported_at))) failures.push(label + ': import timestamp missing');\n  for (const [channel, exp] of Object.entries(expectedChannels)) {\n    const got=r.channel_totals && r.channel_totals[channel];\n    if(!got || ['spend','impressions','sessions','purchases','revenue'].some(k=>got[k]!==exp[k])) failures.push(label + ': '+channel+' daily ledger totals differ');\n  }\n  for (const [src, exp] of Object.entries(expected)) {\n    const got = r.stored && r.stored[src];\n    if (!got || got.records !== exp.records) { failures.push(label + ': ' + src + ' record count differs'); continue; }\n    for (const [k, v] of Object.entries(exp.totals)) if (got.totals[k] !== v) failures.push(label + ': ' + src + ' ' + k + ' total is ' + got.totals[k] + ', expected ' + v);\n  }\n}\nif (JSON.stringify(first.stored) !== JSON.stringify(second.stored)) failures.push('second import changed stored totals (not idempotent)');\nif (failures.length) throw new Error('Neptun all-sources demo verification failed: ' + failures.join('; '));\nreturn [{ json: { success: true, message: 'All 10 generated demo sources imported twice: ' + expectedCount + ' records, totals unchanged (idempotent).', record_count: expectedCount, first_imported_at: first.imported_at, second_imported_at: second.imported_at, stored: second.stored } }];"
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code: Generate synthetic source bundle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code: Generate synthetic source bundle": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: Import (first run)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: Import (first run)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request: Import again (idempotency)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request: Import again (idempotency)": {
+      "main": [
+        [
+          {
+            "node": "Code: Verify counts, totals and idempotency",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Skopje",
+    "saveManualExecutions": true
+  },
+  "versionId": "20000000-0000-4000-8000-0000000000aa",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
