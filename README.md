@@ -1,5 +1,7 @@
 # Neptun Marketing Report — synthetic demo
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A marketing reporting dashboard built for a hackathon. **Every number in it is generated demo data — not real Neptun performance.** No company files, advertising accounts or GA4 properties are connected.
 
 ## Dashboard
@@ -32,3 +34,6 @@ A marketing reporting dashboard built for a hackathon. **Every number in it is g
 
 ## Version-two rollout
 The existing schema stores sources.v2 alongside its legacy generated access policy; only approved generated source IDs are readable and ordinary clients cannot write. Both existing n8n workflows remain inactive. Their earlier manual executions were verified; the updated All Sources download must replace its previous sources.v1 version before another manual run. No new version-two n8n execution or paid AI generation is claimed.
+
+## License
+Released under the MIT License — see [LICENSE](LICENSE). Every number in the demo is synthetic; the license covers the code, not any real marketing data.
